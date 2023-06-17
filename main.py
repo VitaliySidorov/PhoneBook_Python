@@ -1,14 +1,16 @@
 import os, re
 
-def phone_format(n):
+
+def phone_format(n):  # форматирование телефонного номера
     n = n.removeprefix("+")
     n = n.removeprefix("1")
-    n = 1("[ ()-]", '', n)
+    n = re.sub("[ ()-]", "", n)
     return format(int(n[:-1]), ",").replace(",", "-") + n[-1]
 
-def printData(data):
+
+def printData(data):  # Функция вывода телефонной книги в консоль
     phoneBook = []
-    splitLine ="=" * 49
+    splitLine = "=" * 49
     print(splitLine)
     print(" №  Lastname        Name          Phone Numbers")
     print(splitLine)
@@ -17,7 +19,12 @@ def printData(data):
     for contact in data:
         lastName, name, phone = contact.rstrip().split(",")
         phoneBook.append(
-            {"ID": personID, "lastName": lastName, "name": name, "phone": phone_format(phone)}
+            {
+                "ID": personID,
+                "lastName": lastName,
+                "name": name,
+                "phone": phone_format(phone),
+            }
         )
         personID += 1
 
@@ -28,7 +35,7 @@ def printData(data):
     print(splitLine)
 
 
-def showContacts(fileName):
+def showContacts(fileName):  # Функция открытия телефонной книги
     os.system("cls")
     phoneBook = []
     with open(fileName, "r", encoding="UTF-8") as file:
@@ -37,7 +44,7 @@ def showContacts(fileName):
     input("\n--- press any key ---")
 
 
-def addContact(fileName):
+def addContact(fileName):  # Функция добавления нового контакта в телефонную книгу
     os.system("cls")
     with open(fileName, "a", encoding="UTF-8") as file:
         res = ""
@@ -50,7 +57,7 @@ def addContact(fileName):
     input("\nContact was successfully added!\n--- press any key ---")
 
 
-def findContact(fileName):
+def findContact(fileName):  # Функция поиска контактов в телефонной книге
     os.system("cls")
     target = input("Input Item of Contact for searching: ")
     result = []
@@ -69,30 +76,33 @@ def findContact(fileName):
     input("--- press any key ---")
 
 
-def changeContact(fileName):
+def changeContact(fileName):  # Функция изменения информации в контакте
     os.system("cls")
     phoneBook = []
     with open(fileName, "r", encoding="UTF-8") as file:
         data = sorted(file.readlines())
         printData(data)
 
-        numberContact = int(input("Input Number of Contact for changing or 0 for return Main Menu: "))
-        print(data[numberContact-1].rstrip().split(','))
+        numberContact = int(
+            input("Input Number of Contact for changing or 0 for return Main Menu: ")
+        )
+        print(data[numberContact - 1].rstrip().split(","))
         if numberContact != 0:
             newLastName = input("Input new Lastname: ")
             newName = input("Input new Name: ")
             newPhone = input("Input new Phone: ")
-            data[numberContact-1] = newLastName + ',' + newName + ',' + newPhone + '\n'
+            data[numberContact - 1] = (
+                newLastName + "," + newName + "," + newPhone + "\n"
+            )
             with open(fileName, "w", encoding="UTF-8") as file:
                 file.write("".join(data))
                 print("\nContact was successfully changed!")
                 input("\n--- press any key ---")
         else:
             return
-    
 
 
-def deleteContact(fileName):
+def deleteContact(fileName):  # Функция удаления контакта из телефонной книги
     os.system("cls")
     with open(fileName, "r+", encoding="UTF-8") as file:
         data = sorted(file.readlines())
@@ -113,7 +123,7 @@ def deleteContact(fileName):
     input("--- press any key ---")
 
 
-def drawInterface():
+def drawInterface():  # Функция рисования интерфейса главного меню
     print("#####   PHONE BOOK   #####")
     print("=" * 26)
     print(" [1] -- Show Contacts")
@@ -125,7 +135,7 @@ def drawInterface():
     print("=" * 26)
 
 
-def main(file_name):
+def main(file_name):  # Функция реализации главного меню
     while True:
         os.system("cls")
         drawInterface()
